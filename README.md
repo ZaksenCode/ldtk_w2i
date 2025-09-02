@@ -1,5 +1,6 @@
 # LDtk World 2 Image
-Hi, this is simple rust application create with egui that may merge and generate full world map for ldtk world.
+Hi, this is simple rust application create with egui that may merge and generate full world map for ldtk world. <br/>
+Inspired by: https://github.com/Cammin/LDtkWorldImageExporter.
 # Why
 I just want to learn rust.
 # How to use
