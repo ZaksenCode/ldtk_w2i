@@ -2,7 +2,7 @@ use std::path::PathBuf;
 
 use image::{DynamicImage, GenericImageView, ImageReader, RgbaImage};
 
-use crate::schemas::{LDtk, Level};
+use crate::{app::LDtkApp, schemas::{LDtk, Level}};
 
 #[derive(Debug)]
 struct WorldDims {
@@ -12,33 +12,21 @@ struct WorldDims {
   height: u32,
 }
 
-// TODO: Generate image from world levels
-pub fn world_image(world: &LDtk, img_path: &PathBuf) -> RgbaImage {
-  let world_size = total_world_size(world);
+pub fn world_image(app: &LDtkApp, world: &LDtk, img_path: &PathBuf) -> RgbaImage {
+  let world_size = total_world_size(app, world);
   let mut img = RgbaImage::new(
     world_size.width.try_into().unwrap(),
     world_size.height.try_into().unwrap(),
   );
-
-  let y_less_zero = world_size.y < 0;
-  let x_less_zero = world_size.x < 0;
 
   for level in &world.levels {
     let lvl_img = level_image(level, img_path);
     for x in 0..lvl_img.width() {
       for y in 0..lvl_img.height() {
         let pixel = lvl_img.get_pixel(x, y);
-        let ny = if y_less_zero {
-          (-world_size.y + level.world_y) as u32 + y
-        } else {
-          (world_size.y + level.world_y) as u32 + y
-        };
-        let nx = if x_less_zero {
-          (-world_size.x + level.world_x) as u32 + x
-        } else {
-          (world_size.x + level.world_x) as u32 + x
-        };
-          img.put_pixel(nx, ny, pixel.to_owned());
+        let ny = (world_size.y.abs() + level.world_y) as u32 + y;
+        let nx = (world_size.x.abs() + level.world_x) as u32 + x;
+        img.put_pixel(nx, ny, pixel.to_owned());
       }
     }
   }
@@ -51,7 +39,7 @@ fn level_image(level: &Level, img_path: &PathBuf) -> DynamicImage {
   ImageReader::open(img_path.join(lvl_name)).unwrap().decode().unwrap()
 }
 
-fn total_world_size(world: &LDtk) -> WorldDims {
+fn total_world_size(app: &LDtkApp, world: &LDtk) -> WorldDims {
   let mut dims = WorldDims {
     x: 0,
     y: 0,
@@ -62,18 +50,21 @@ fn total_world_size(world: &LDtk) -> WorldDims {
   dims.x = world
     .levels
     .iter()
+    .filter(|level| level.world_depth == app.world_depth)
     .min_by(|levela, levelb| levela.world_x.cmp(&levelb.world_x))
     .unwrap()
     .world_x;
   dims.y = world
     .levels
     .iter()
+    .filter(|level| level.world_depth == app.world_depth)
     .min_by(|levela, levelb| levela.world_y.cmp(&levelb.world_y))
     .unwrap()
     .world_y;
   let max_level_x = world
     .levels
     .iter()
+    .filter(|level| level.world_depth == app.world_depth)
     .max_by(|levela, levelb| {
       (levela.world_x + levela.px_wid).cmp(&(levelb.world_x + levelb.px_wid))
     })
@@ -81,6 +72,7 @@ fn total_world_size(world: &LDtk) -> WorldDims {
   let max_level_y = world
     .levels
     .iter()
+    .filter(|level| level.world_depth == app.world_depth)
     .max_by(|levela, levelb| {
       (levela.world_y + levela.px_hei).cmp(&(levelb.world_y + levelb.px_hei))
     })
