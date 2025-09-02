@@ -1,5 +1,5 @@
 # LDtk World 2 Image
-Hi, this is simple rust application that may merge on generate map for ldtk world.
+Hi, this is simple rust application create with egui that may merge on generate map for ldtk world.
 # Why
 I just want to learn rust.
 # How to use
