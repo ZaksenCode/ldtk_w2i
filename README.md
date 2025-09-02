@@ -4,7 +4,7 @@ Inspired by: https://github.com/Cammin/LDtkWorldImageExporter.
 # Why
 I just want to learn rust.
 # How to use
-1) Enable LXdt image generation. <br/>
+1) Enable LDtk image generation. <br/>
 <img width="844" height="438" alt="image" src="https://github.com/user-attachments/assets/bb3393ba-dc9b-42ed-93ad-35fb3866e6fa" /> <br/>
 2) Export project as json <br/>
 <img width="860" height="129" alt="image" src="https://github.com/user-attachments/assets/1af8f0b0-1dab-495a-a157-e2e6536591bd" /> <br/>
