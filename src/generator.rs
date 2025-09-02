@@ -25,9 +25,6 @@ pub fn world_image(world: &LDtk, img_path: &PathBuf) -> RgbaImage {
 
   for level in &world.levels {
     let lvl_img = level_image(level, img_path);
-    println!("{:?}, {:?}", level.world_x, level.world_x + level.px_wid);
-    println!("{:?}, {:?}", level.world_y, level.world_y + level.px_hei);
-
     for x in 0..lvl_img.width() {
       for y in 0..lvl_img.height() {
         let pixel = lvl_img.get_pixel(x, y);
